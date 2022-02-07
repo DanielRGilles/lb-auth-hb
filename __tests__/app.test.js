@@ -40,6 +40,7 @@ describe('lazy-bouncer routes', () => {
   it('creates a new user', async () => {
     const res = await request(app).post('/api/v1/users').send(mockUser);
     const { firstName, lastName, email } = mockUser;
+    
 
     expect(res.body).toEqual({
       id: expect.any(String),
@@ -52,9 +53,9 @@ describe('lazy-bouncer routes', () => {
   it('returns the current user', async () => {
     const [agent, user] = await registerAndLogin();
     const me = await agent.get('/api/v1/users/me');
-
+   
     expect(me.body).toEqual({
-      ...user.toJSON(),
+      ...user,
       exp: expect.any(Number),
       iat: expect.any(Number),
     });
@@ -83,6 +84,6 @@ describe('lazy-bouncer routes', () => {
     const [agent, user] = await registerAndLogin({ email: 'admin' });
     const res = await agent.get('/api/v1/users');
 
-    expect(res.body).toEqual([user.toJSON()]);
+    expect(res.body).toEqual([{ ...user }]);
   });
 });
